@@ -1,0 +1,214 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "E-commerce Store API",
+    "description": "This API handles operations for an e-commerce store, including cart management, checkout processes, and admin functionalities.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/cart/add": {
+      "post": {
+        "summary": "Add an item to the cart",
+        "operationId": "addToCart",
+        "tags": ["Cart"],
+        "requestBody": {
+          "description": "Item to add to the cart",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item added to cart successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/checkout": {
+      "post": {
+        "summary": "Checkout the cart and place an order",
+        "operationId": "checkout",
+        "tags": ["Checkout"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cartItems": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CartItem"
+                    }
+                  },
+                  "discountCode": {
+                    "type": "string"
+                  }
+                },
+                "required": ["cartItems"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderConfirmation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        }
+      }
+    },
+    "/admin/generate-discount": {
+      "get": {
+        "summary": "Generate a new discount code",
+        "operationId": "generateDiscount",
+        "tags": ["Admin"],
+        "responses": {
+          "200": {
+            "description": "Discount code generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "discountCode": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/report": {
+      "get": {
+        "summary": "Get sales and discount report",
+        "operationId": "getReport",
+        "tags": ["Admin"],
+        "responses": {
+          "200": {
+            "description": "Report fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesReport"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CartItem": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 2
+          }
+        },
+        "required": ["itemId", "quantity"]
+      },
+      "Cart": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItem"
+            }
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "float",
+            "example": 123.45
+          }
+        }
+      },
+      "OrderConfirmation": {
+        "type":        "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "example": "ORD123456"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "float",
+            "example": 100.50
+          },
+          "discountApplied": {
+            "type": "boolean",
+            "example": true
+          },
+          "finalPrice": {
+            "type": "number",
+            "format": "float",
+            "example": 90.45
+          }
+        }
+      },
+      "SalesReport": {
+        "type": "object",
+        "properties": {
+          "totalSales": {
+            "type": "number",
+            "format": "float",
+            "example": 10000.00
+          },
+          "totalOrders": {
+            "type": "integer",
+            "example": 200
+          },
+          "discountsGiven": {
+            "type": "integer",
+            "example": 50
+          }
+        }
+      }
+    }
+  }
+}
+
