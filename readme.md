@@ -16,8 +16,8 @@ Follow these steps to get your development environment running:
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/your-project-name.git
-cd your-project-name
+git clone https://github.com/ghasara/newstackapp-assignment.git
+cd newstackapp-assignment
 ```
 
 2. **Install dependencies** 
